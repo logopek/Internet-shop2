@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="buyitem" >
+    <form action="" method="post">
+    <p>Подтверить покупку?</p>
+    <p>Это спишет с вашего баланса {{item.price}} рублей</p>
+    <button type="submit" class="btn btn-primary">Подтвердить</button>
+    </form>
+</div>
+{% endblock %}

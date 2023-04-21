@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Вы купили</h1>
+<div class="cart">
+
+    {%- for i in items %}
+    <div class="item-cart {{loop.index}}">
+        <h4>{{i.title}}</h4> 
+        <p>{{i.about}}</p>
+        <h5>Из категории: {{i.category}}</h5>
+        <p>Количество: {{user_items[i.title]}}</p>
+
+    </div>
+
+    {% endfor %}
+</div>
+{% endblock %}

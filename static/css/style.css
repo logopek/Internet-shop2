@@ -1,0 +1,45 @@
+.centerialize{
+	justify-content: center;
+	left: 50%;
+	position: fixed;
+    margin-top: -10px;
+}
+.content{
+    display: flex;
+    flex-wrap: wrap;
+}
+.item{
+    flex: 1 0 25%;
+    width: 50%;
+    margin: 0 auto;
+    border-radius: 10px;
+    background-color: lightgray;
+    margin-top: 10px;
+}
+
+.cart{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+.item-cart{
+    flex: 1 0 100%;
+    margin: 0 auto;
+    border-radius: 10px;
+    background-color: lightgray;
+    margin-top: 10px;
+}
+.cart_btn{
+    background: url("../icons/basket-fill.svg") no-repeat;
+    width: 40px;
+    height: 40px;
+    background-size: 100% 100%;
+    margin-left: auto;
+}
+.logout-href{
+    background: url("../icons/logout.svg") no-repeat;
+    width: 40px;
+    height: 40px;
+    background-size: 100% 100%;
+    margin-left: 10px;
+}
