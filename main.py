@@ -41,9 +41,7 @@ def get_all_items(offset: int, db_sess: sqlalchemy.orm.Session, category: str = 
 
 @flask_login.login_required
 def bancheck():
-    if flask_login.current_user.is_authenticated:
-        if flask_login.current_user.ban == 1:
-            return True
+    return False
 
 
 def admincfg(current_user: flask_login.current_user, t_user: int, method: methods.BanUnban | methods.SetRole):
@@ -99,11 +97,9 @@ def error404(error):
 def error403(error):
     return render_template("403.html")
 
-
 @app.errorhandler(401)
 def error401(error):
-    return redirect("/register")
-
+    return redirect('/login')
 
 @login_manager.user_loader
 def load_user(id):
@@ -113,8 +109,7 @@ def load_user(id):
 
 @app.route("/logout")
 def logout():
-    if bancheck():
-        flask.abort(403)
+    
     flask_login.logout_user()
     return redirect("/")
 
@@ -122,8 +117,7 @@ def logout():
 @app.route("/admin_panel", methods=["GET", "POST"])
 @flask_login.login_required
 def admin():
-    if bancheck():
-        flask.abort(403)
+    
     if flask_login.current_user.role < 1000:
         if request.method == "GET":
             return render_template("admin_panel.html", form=AdminForm())
@@ -148,13 +142,11 @@ def admin():
 
 
 @app.route("/", methods=["GET", "POST"])
-@flask_login.login_required
 def main():
     pp = 5
     content = {}
     page = request.args.get('page', 1, type=int)
-    if bancheck():
-        flask.abort(403)
+    
     db_sess = db_session.create_session()
     alls = get_all_items(offset=(page - 1) * pp, per_page=pp, category=request.args.get('category', ''),
                          db_sess=db_sess)
@@ -173,17 +165,14 @@ def main():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if bancheck():
-        flask.abort(403)
+    
     form = RegisterForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.login == form.login.data).first():
+        if db_sess.query(User).filter(User.login == form.login.data).first() or db_sess.query(User).filter(User.email == form.email.data).first():
+            print('user exists')
             return render_template('register.html', title='Register', form=form,
                                    message="This user already exists")
-        if db_sess.query(User).filter(User.email == form.email.data):
-            return render_template('register.html', title='Register', form=form,
-                                   message="This email already exists")
         user = User(
             login=form.login.data,
             email=form.email.data
@@ -198,8 +187,6 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if bancheck():
-        flask.abort(403)
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -216,8 +203,7 @@ def login():
 @app.route("/additem", methods=["GET", "POST"])
 @flask_login.login_required
 def additem():
-    if bancheck():
-        flask.abort(403)
+    
     x = flask_login.current_user.role
     if request.method == "GET":
         if x < 1000:
@@ -246,8 +232,7 @@ def additem():
 @app.route('/buy/<int:id>', methods=["GET", "POST"])
 @flask_login.login_required
 def buy_item(id):
-    if bancheck():
-        flask.abort(403)
+    
     if request.method == "GET":
         db_sess = db_session.create_session()
         item = db_sess.query(Item).where(Item.id == id).one()
@@ -269,8 +254,7 @@ def buy_item(id):
 @app.route("/cart")
 @flask_login.login_required
 def cart():
-    if bancheck():
-        flask.abort(403)
+    
     user = flask_login.current_user
     db_sess = db_session.create_session()
     cart_user = []
